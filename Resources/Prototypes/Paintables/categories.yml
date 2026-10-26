@@ -23,3 +23,13 @@
   - Closet
   - WallLocker
   - WallCloset
+
+- type: paintableGroupCategory
+  id: PDAs
+  groups:
+  - PDA
+
+- type: paintableGroupCategory
+  id: IDCards
+  groups:
+  - IDCard

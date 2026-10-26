@@ -16,6 +16,8 @@
     heldPrefix: default
     storedRotation: -90
   - type: Access
+  - type: Paintable
+    group: IDCard
   - type: IdCard
   - type: StationRecordKeyStorage
   - type: Tag
@@ -722,6 +724,8 @@
   id: LibrarianIDCard
   name: librarian ID card
   components:
+  - type: Paintable
+    group: null
   - type: Sprite
     layers:
     - state: default
@@ -960,6 +964,8 @@
   name: passenger ID card
   suffix: Agent
   components:
+  - type: Paintable
+    group: null
   - type: Sprite
     layers:
     - state: default
@@ -1201,6 +1207,8 @@
   id: WizardIDCard
   name: wizard ID card
   components:
+  - type: Paintable
+    group: null
   - type: Sprite
     layers:
     - state: wizard

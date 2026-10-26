@@ -5,6 +5,8 @@ using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
+using Content.Shared.Access.Components;
+using Content.Shared.PDA;
 using Content.Shared.Popups;
 using Content.Shared.SprayPainter.Components;
 using Content.Shared.SprayPainter.Prototypes;
@@ -177,6 +179,26 @@ public abstract partial class SharedSprayPainterSystem : EntitySystem
 
         if (!TryComp<SprayPainterComponent>(args.Used, out var painter))
             return;
+
+        if (painter.DecalMode == DecalPaintMode.Remove
+            && HasComp<PaintedComponent>(ent)
+            && (HasComp<PdaComponent>(ent) || HasComp<IdCardComponent>(ent)))
+        {
+            if (TryComp<LimitedChargesComponent>(args.Used, out var removeCharges)
+                && Charges.GetCurrentCharges((args.Used, removeCharges)) < painter.DecalChargeCost)
+            {
+                _popup.PopupEntity(Loc.GetString("spray-painter-interact-no-charges"), args.User, args.User);
+                return;
+            }
+
+            Appearance.RemoveData(ent, PaintableVisuals.Prototype);
+            RemComp<PaintedComponent>(ent);
+            if (TryComp<LimitedChargesComponent>(args.Used, out removeCharges))
+                Charges.TryUseCharges((args.Used, removeCharges), painter.DecalChargeCost);
+            Audio.PlayPredicted(painter.SpraySound, args.Used, args.User);
+            args.Handled = true;
+            return;
+        }
 
         if (ent.Comp.Group is not { } group
             || !painter.StylesByGroup.TryGetValue(group, out var selectedStyle)
